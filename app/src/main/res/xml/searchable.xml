@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<searchable xmlns:android="http://schemas.android.com/apk/res/android">
+    android:label="@string/app_label"
+    android:hint="@string/search_hint"
+    android:searchSettingsDescription="@string/settings_description"
+    android:searchSuggestAuthority="com.android.pharmacycatalogfragments"
+    android:searchSuggestIntentAction="android.intent.action.VIEW"
+    android:searchSuggestIntentData="content://com.android.pharmacycatalogfragments/catalog"
+    android:searchSuggestThreshold="3"
+    android:searchSuggestSelection=" ?">
+</searchable>
