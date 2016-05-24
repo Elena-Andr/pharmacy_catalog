@@ -19,7 +19,7 @@ import com.android.pharmacycatalogfragments.DatabasePart.PharmacyContract;
  */
 public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    public PharmacyAdapter mPharmacyAdapter;
+    private PharmacyAdapter mPharmacyAdapter;
     private ListView mListView;
 
     public MainActivityFragment() {
@@ -59,17 +59,14 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        changeCursor(data);
-    }
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {swapCursor(data);}
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        changeCursor(null);
+        swapCursor(null);
     }
 
-    public void changeCursor(Cursor cursor) {
-        mPharmacyAdapter.swapCursor(cursor);
+    public void swapCursor(Cursor cursor) {mPharmacyAdapter.swapCursor(cursor);
     }
 
 }

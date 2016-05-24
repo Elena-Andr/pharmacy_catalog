@@ -16,8 +16,8 @@ public class PharmacyContentProvider extends ContentProvider {
 
     public final String LOG_TAG = PharmacyContentProvider.class.getSimpleName();
 
-    static final int CATALOG = 100;
-    static final int CATALOG_SUGGESTIONS = 101;
+    private static final int CATALOG = 100;
+    private static final int CATALOG_SUGGESTIONS = 101;
 
     private PharmacyDBHelper mDBHelper;
 

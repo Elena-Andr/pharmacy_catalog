@@ -17,9 +17,9 @@ import com.android.pharmacycatalogfragments.DatabasePart.PharmacyContract;
 public class MainActivity extends AppCompatActivity implements SearchView.OnSuggestionListener,
         SearchView.OnQueryTextListener {
 
-    MainActivityFragment mFragment;
-    SearchView mSearchView;
-    CursorAdapter mSearchAdapter;
+    private MainActivityFragment mFragment;
+    private SearchView mSearchView;
+    private CursorAdapter mSearchAdapter;
 
     @Override
     public void onBackPressed() {
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnSugg
                 null,
                 null);
 
-        mFragment.changeCursor(cursor);
+        mFragment.swapCursor(cursor);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnSugg
                 null,
                 null);
 
-        mFragment.changeCursor(cursor);
+        mFragment.swapCursor(cursor);
 
         return true;
     }
@@ -102,15 +102,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnSugg
 
             Uri suggestionsUri = PharmacyContract.SUGGESTION_URI;
             Cursor cursor = getContentResolver().query(suggestionsUri,
-                    PharmacyContract.CatalogEntry.CATALOG_COLUMNS,
-                    null,
-                    new String[] {newText},
-                    null);
+                        PharmacyContract.CatalogEntry.CATALOG_COLUMNS,
+                        null,
+                        new String[]{newText},
+                        null);
 
-            mSearchAdapter.swapCursor(cursor);
+            mSearchAdapter.changeCursor(cursor);
         }
         else
-            mSearchAdapter.swapCursor(null);
+            mSearchAdapter.changeCursor(null);
 
         return true;
     }
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnSugg
                 new String[] {itemName},
                 null);
 
-        mFragment.changeCursor(cursor);
+        mFragment.swapCursor(cursor);
 
         return true;
     }
