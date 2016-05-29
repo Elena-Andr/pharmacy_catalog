@@ -207,5 +207,46 @@ public class PharmacyContentProvider extends ContentProvider {
                 return super.bulkInsert(uri, values);
         }
     }
+
+    private int insertOrUpdate(ContentValues value) {
+
+        String itemName = value.getAsString(PharmacyContract.CatalogEntry.COLUMN_ITEM_NAME);
+        String vendorName = value.getAsString(PharmacyContract.CatalogEntry.COLUMN_VENDOR_NAME);
+        String section = value.getAsString(PharmacyContract.CatalogEntry.COLUMN_SECTION);
+
+        int id = getID(itemName, vendorName, section);
+
+        if(id == -1)
+            mDBHelper.getWritableDatabase().insert(PharmacyContract.CatalogEntry.TABLE_NAME, null, value);
+        else
+            mDBHelper.getWritableDatabase().update(PharmacyContract.CatalogEntry.TABLE_NAME,
+                    value,
+                    PharmacyContract.CatalogEntry.COLUMN_ID + "=?",
+                    new String[]{Integer.toString(id)});
+
+        return id;
+
+    }
+
+    private int getID(String itemName, String vendorName, String section){
+
+        String selection = PharmacyContract.CatalogEntry.COLUMN_ITEM_NAME + "=? AND "
+                + PharmacyContract.CatalogEntry.COLUMN_VENDOR_NAME + "=? AND "
+                + PharmacyContract.CatalogEntry.COLUMN_SECTION + "=?";
+
+        Cursor c =  mDBHelper.getWritableDatabase().query(PharmacyContract.CatalogEntry.TABLE_NAME,
+                new String[]{PharmacyContract.CatalogEntry.COLUMN_ID},
+                selection,
+                new String[]{itemName, vendorName, section},
+                null,
+                null,
+                null,
+                null);
+
+        if (c.moveToFirst()) //if the row exist then return the id
+            return c.getInt(c.getColumnIndex(PharmacyContract.CatalogEntry.COLUMN_ID));
+        return -1;
+    }
+
 }
 
