@@ -192,7 +192,8 @@ public class PharmacyContentProvider extends ContentProvider {
                 int returnCount = 0;
                 try {
                     for (ContentValues value : values) {
-                        long _id = db.insert(PharmacyContract.CatalogEntry.TABLE_NAME, null, value);
+                        //long _id = db.insert(PharmacyContract.CatalogEntry.TABLE_NAME, null, value);
+                        long _id = insertOrUpdate(value);
                         if (_id != -1) {
                             returnCount++;
                         }

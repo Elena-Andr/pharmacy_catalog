@@ -47,7 +47,7 @@ public class PharmacyDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_CREATE_CATALOG_TABLE);
 
         // TODO: used just for tests, should be removed
-        fillWithInitialData(sqLiteDatabase);
+       // fillWithInitialData(sqLiteDatabase);
     }
 
     // THIS METHOD IS ONLY FOR TESTS, WILL BE REMOVED LATER

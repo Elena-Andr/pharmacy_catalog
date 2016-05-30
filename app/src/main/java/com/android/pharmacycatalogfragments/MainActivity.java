@@ -2,6 +2,7 @@ package com.android.pharmacycatalogfragments;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -45,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnSugg
 
         mFragment =  ((MainActivityFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.fragment));
+
+        startService(new Intent(this, UpdateDBService.class));
     }
 
     @Override
