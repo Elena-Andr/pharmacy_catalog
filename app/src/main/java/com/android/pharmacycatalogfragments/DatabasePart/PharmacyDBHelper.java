@@ -8,22 +8,20 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.android.pharmacycatalogfragments.DatabasePart.PharmacyContract.CatalogEntry;
-import com.android.pharmacycatalogfragments.FileHelperPart.CSVParser;
-import com.android.pharmacycatalogfragments.FileHelperPart.DownloadFileFromURL;
+import com.android.pharmacycatalogfragments.Utility.CSVParser;
+import com.android.pharmacycatalogfragments.Utility.DownloadFileFromURL;
 
 import java.io.IOException;
 
 public class PharmacyDBHelper extends SQLiteOpenHelper {
 
-    public static final String LOG_TAG = SQLiteOpenHelper.class.getSimpleName();
+    private static final String LOG_TAG = SQLiteOpenHelper.class.getSimpleName();
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "pharmacy.db";
-    private Context context;
 
     public PharmacyDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.context = context;
     }
 
     @Override
@@ -42,7 +40,8 @@ public class PharmacyDBHelper extends SQLiteOpenHelper {
                         CatalogEntry.COLUMN_QUANTITY + INTEGER_TYPE_NOT_NULL + COMMA_SEP +
                         CatalogEntry.COLUMN_ITEM_PRICE + REAL_TYPE_NOT_NULL + COMMA_SEP +
                         CatalogEntry.COLUMN_SECTION + TEXT_TYPE_NOT_NULL + COMMA_SEP +
-                        CatalogEntry.COLUMN_SEARCH_STR + TEXT_TYPE_NOT_NULL + " )";
+                        CatalogEntry.COLUMN_SEARCH_STR + TEXT_TYPE_NOT_NULL +
+                        CatalogEntry.COLUMN_MODIFIED_DATE + TEXT_TYPE_NOT_NULL + " )";
 
         sqLiteDatabase.execSQL(SQL_CREATE_CATALOG_TABLE);
 
@@ -51,7 +50,7 @@ public class PharmacyDBHelper extends SQLiteOpenHelper {
     }
 
     // THIS METHOD IS ONLY FOR TESTS, WILL BE REMOVED LATER
-    private void fillWithInitialData(SQLiteDatabase sqLiteDatabase) {
+    /*private void fillWithInitialData(SQLiteDatabase sqLiteDatabase) {
         String urlPath = "http://vk.com/doc340921770_437488672?hash=bf70739b445672e04c&dl=f9f924d4b4e9a38b8d";
         String localFilePath;
         try {
@@ -83,7 +82,7 @@ public class PharmacyDBHelper extends SQLiteOpenHelper {
                 }
                 context.getContentResolver().notifyChange(uri, null);
                 return returnCount;
-        }
+        }*/
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
