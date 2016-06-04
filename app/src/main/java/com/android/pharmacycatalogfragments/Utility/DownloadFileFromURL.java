@@ -1,4 +1,4 @@
-package com.android.pharmacycatalogfragments.FileHelperPart;
+package com.android.pharmacycatalogfragments.Utility;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -15,7 +15,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class DownloadFileFromURL {
 
-    public static final String LOG_TAG = DownloadFileFromURL.class.getSimpleName();
+    private static final String LOG_TAG = DownloadFileFromURL.class.getSimpleName();
     private static final int BUFFER_SIZE = 10 * 1024;
 
     public static String downloadFile(String fileURL, Context context)
