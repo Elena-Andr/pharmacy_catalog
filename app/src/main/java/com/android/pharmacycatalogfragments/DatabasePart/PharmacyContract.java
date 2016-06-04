@@ -22,6 +22,7 @@ public class PharmacyContract {
         public static final String COLUMN_ITEM_PRICE = "item_price";
         public static final String COLUMN_SECTION = "section";
         public static final String COLUMN_SEARCH_STR = "search_str";
+        public static final String COLUMN_MODIFIED_DATE = "modified_date";
 
         public static final int COL_INDEX_ID = 0;
         public static final int COL_INDEX_ITEM_NAME = 1;
@@ -30,6 +31,7 @@ public class PharmacyContract {
         public static final int COL_INDEX_VENDOR_NAME = 4;
         public static final int COL_INDEX_SECTION = 5;
         public static final int COL_INDEX_SEARCH_STR = 6;
+        public static final int COL_INDEX_MODIFIED_DATE = 7;
 
         public static final String[] CATALOG_COLUMNS = {
                 TABLE_NAME + "." + _ID,
