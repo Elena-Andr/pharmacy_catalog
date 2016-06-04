@@ -3,9 +3,12 @@ package com.android.pharmacycatalogfragments;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
@@ -14,13 +17,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 import com.android.pharmacycatalogfragments.DatabasePart.PharmacyContract;
+import com.android.pharmacycatalogfragments.Utility.DateTimeHelper;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnSuggestionListener,
         SearchView.OnQueryTextListener {
 
-    MainActivityFragment mFragment;
-    SearchView mSearchView;
-    CursorAdapter mSearchAdapter;
+    private MainActivityFragment mFragment;
+    private SearchView mSearchView;
+    private CursorAdapter mSearchAdapter;
 
     @Override
     public void onBackPressed() {
@@ -47,7 +53,29 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnSugg
         mFragment =  ((MainActivityFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.fragment));
 
-        startService(new Intent(this, UpdateDBService.class));
+        // Calculate how much time passed after the last update
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String lastModifiedDateS = preferences.getString("last_modified_date", "");
+
+        Calendar currentDate = DateTimeHelper.getCurrentDateAsCalendar();
+        String dateFormat = Resources.getSystem().getString(R.string.date_format);
+        Calendar lastModifiedDate = DateTimeHelper.getCalendarFromString(lastModifiedDateS, dateFormat);
+
+        int passedMinutesAfterUpdate = DateTimeHelper.getMinutesBetweenDates(currentDate, lastModifiedDate);
+
+        if(passedMinutesAfterUpdate > 180) {
+            //Update preferences with the new date
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("last_modified_date", DateTimeHelper.getStringFromCalendar(currentDate, dateFormat));
+            editor.commit();
+
+            Intent serviceIntent = new Intent(this, UpdateDBService.class);
+
+            //Pass current time to service
+            serviceIntent.putExtra("current_time", DateTimeHelper.getStringFromCalendar(currentDate, dateFormat));
+            startService(new Intent(this, UpdateDBService.class));
+
+        }
     }
 
     @Override
