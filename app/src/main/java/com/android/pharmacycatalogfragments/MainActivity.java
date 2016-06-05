@@ -1,5 +1,6 @@
 package com.android.pharmacycatalogfragments;
 
+import android.app.Application;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnSugg
 
         int passedMinutesAfterUpdate = DateTimeHelper.getMinutesBetweenDates(currentDate, lastModifiedDate);
 
-        if(passedMinutesAfterUpdate > 180) {
+        if(passedMinutesAfterUpdate > 180 || lastModifiedDateS == "") {
             //Update preferences with the new date
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString("last_modified_date", DateTimeHelper.getStringFromCalendar(currentDate, dateFormat));

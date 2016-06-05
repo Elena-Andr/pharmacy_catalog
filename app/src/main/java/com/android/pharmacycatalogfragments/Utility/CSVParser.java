@@ -3,6 +3,8 @@ package com.android.pharmacycatalogfragments.Utility;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,6 +18,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import com.android.pharmacycatalogfragments.DatabasePart.PharmacyContract.CatalogEntry;
+import com.android.pharmacycatalogfragments.MainActivity;
 import com.android.pharmacycatalogfragments.R;
 
 
@@ -23,7 +26,7 @@ public class CSVParser {
 
     private static final String LOG_TAG = CSVParser.class.getSimpleName();
 
-    public static ContentValues[] Parse( String filePath, String currentDateTime) {
+    public static ContentValues[] Parse( String filePath, String currentUpdateTime) {
 
         List<ContentValues> contentValuesArray = new ArrayList<>();
 
@@ -36,7 +39,7 @@ public class CSVParser {
 
             while( (line = bufferedReader.readLine()) != null) {
                 values = line.split(";");
-                ContentValues contentValues = populateWithValues(values, currentDateTime);
+                ContentValues contentValues = populateWithValues(values, currentUpdateTime);
                 contentValuesArray.add(contentValues);
             }
 
@@ -47,7 +50,7 @@ public class CSVParser {
         return contentValuesArray.toArray(new ContentValues[contentValuesArray.size()]);
     }
 
-    private static ContentValues populateWithValues(String[] values, String currentDateTime) {
+    private static ContentValues populateWithValues(String[] values, String currentUpdateTime) {
 
         String itemName = values[1];
         String itemPrice = values[2];
@@ -62,7 +65,7 @@ public class CSVParser {
         contentValues.put(CatalogEntry.COLUMN_VENDOR_NAME, vendorName);
         contentValues.put(CatalogEntry.COLUMN_SECTION, section);
         contentValues.put(CatalogEntry.COLUMN_SEARCH_STR, itemName.toLowerCase());
-        contentValues.put(CatalogEntry.COLUMN_MODIFIED_DATE, currentDateTime);
+        contentValues.put(CatalogEntry.COLUMN_MODIFIED_DATE, currentUpdateTime);
 
         return contentValues;
     }

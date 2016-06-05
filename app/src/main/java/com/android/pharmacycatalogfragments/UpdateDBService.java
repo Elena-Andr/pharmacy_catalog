@@ -19,7 +19,8 @@ import java.util.List;
 public class UpdateDBService extends Service {
 
     private static final String LOG_TAG = UpdateDBService.class.getSimpleName();
-    private String mCurrentDateTime;
+
+    private String mCurrentUpdateTime;
 
     @Override
     public void onCreate() {
@@ -28,10 +29,10 @@ public class UpdateDBService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent != null && intent.getExtras() != null) {
-            mCurrentDateTime = intent.getStringExtra("current_time");
-        }
 
+        if(intent != null && intent.getExtras() != null) {
+            mCurrentUpdateTime = intent.getStringExtra("current_time");
+        }
         AsyncUpdater asyncUpdater = new AsyncUpdater();
         asyncUpdater.execute();
         return START_STICKY;
@@ -61,7 +62,7 @@ public class UpdateDBService extends Service {
             String localFilePath;
             try {
                 localFilePath = DownloadFileFromURL.downloadFile(urlPath, getApplicationContext());
-                ContentValues[] contentValues = CSVParser.Parse(localFilePath, mCurrentDateTime);
+                ContentValues[] contentValues = CSVParser.Parse(localFilePath, mCurrentUpdateTime);
                 if (contentValues.length > 0) {
                     insertOrUpdate(contentValues);
                 }
@@ -97,8 +98,8 @@ public class UpdateDBService extends Service {
 
             //Delete the records which were not affected by the last update
             getContentResolver().delete(PharmacyContract.CONTENT_URI,
-                    PharmacyContract.CatalogEntry.COLUMN_MODIFIED_DATE + "=?",
-                    new String[]{mCurrentDateTime});
+                    PharmacyContract.CatalogEntry.COLUMN_MODIFIED_DATE + "!=?",
+                    new String[]{mCurrentUpdateTime});
         }
 
     }
