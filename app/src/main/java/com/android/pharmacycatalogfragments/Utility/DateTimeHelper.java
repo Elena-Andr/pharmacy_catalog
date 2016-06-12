@@ -16,18 +16,18 @@ public class DateTimeHelper {
     public static String getCurrentDateAsString() {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat(Resources.getSystem().getString(R.string.date_format));
-        return dateFormat.format(calendar);
+        return dateFormat.format(calendar.getTime());
     }
 
     public static Calendar getCurrentDateAsCalendar() {
         return Calendar.getInstance();
     }
 
-    public static Calendar getCalendarFromString(String date, String dateFromat) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(dateFromat);
+    public static Calendar getCalendarFromString(String date, String dateFormat) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
         Date d = null;
         try {
-            d = dateFormat.parse(date);
+            d = simpleDateFormat.parse(date);
         } catch (ParseException e) {
             Log.e(LOG_TAG, "Error ", e);
         }
@@ -47,6 +47,6 @@ public class DateTimeHelper {
 
     public static String getStringFromCalendar(Calendar calendar, String dateFormat) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
-        return simpleDateFormat.format(calendar);
+        return simpleDateFormat.format(calendar.getTime());
     }
 }

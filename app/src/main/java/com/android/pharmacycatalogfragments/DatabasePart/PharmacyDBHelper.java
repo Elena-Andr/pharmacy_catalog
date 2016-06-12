@@ -40,7 +40,7 @@ public class PharmacyDBHelper extends SQLiteOpenHelper {
                         CatalogEntry.COLUMN_QUANTITY + INTEGER_TYPE_NOT_NULL + COMMA_SEP +
                         CatalogEntry.COLUMN_ITEM_PRICE + REAL_TYPE_NOT_NULL + COMMA_SEP +
                         CatalogEntry.COLUMN_SECTION + TEXT_TYPE_NOT_NULL + COMMA_SEP +
-                        CatalogEntry.COLUMN_SEARCH_STR + TEXT_TYPE_NOT_NULL +
+                        CatalogEntry.COLUMN_SEARCH_STR + TEXT_TYPE_NOT_NULL + COMMA_SEP +
                         CatalogEntry.COLUMN_MODIFIED_DATE + TEXT_TYPE_NOT_NULL + " )";
 
         sqLiteDatabase.execSQL(SQL_CREATE_CATALOG_TABLE);

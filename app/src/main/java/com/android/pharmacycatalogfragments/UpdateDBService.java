@@ -3,8 +3,12 @@ package com.android.pharmacycatalogfragments;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -12,14 +16,16 @@ import com.android.pharmacycatalogfragments.DatabasePart.PharmacyContract;
 import com.android.pharmacycatalogfragments.Utility.CSVParser;
 import com.android.pharmacycatalogfragments.Utility.DownloadFileFromURL;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UpdateDBService extends Service {
 
     private static final String LOG_TAG = UpdateDBService.class.getSimpleName();
-
     private String mCurrentUpdateTime;
 
     @Override
@@ -30,9 +36,9 @@ public class UpdateDBService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        if(intent != null && intent.getExtras() != null) {
-            mCurrentUpdateTime = intent.getStringExtra("current_time");
-        }
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MyApplication.context);
+        mCurrentUpdateTime = preferences.getString("last_modified_date", "");
+
         AsyncUpdater asyncUpdater = new AsyncUpdater();
         asyncUpdater.execute();
         return START_STICKY;
@@ -62,6 +68,7 @@ public class UpdateDBService extends Service {
             String localFilePath;
             try {
                 localFilePath = DownloadFileFromURL.downloadFile(urlPath, getApplicationContext());
+                //localFilePath = getCSVFilePath();
                 ContentValues[] contentValues = CSVParser.Parse(localFilePath, mCurrentUpdateTime);
                 if (contentValues.length > 0) {
                     insertOrUpdate(contentValues);
@@ -70,6 +77,32 @@ public class UpdateDBService extends Service {
                 Log.e(LOG_TAG, "ERROR", e);
             }
             stopSelf();
+        }
+
+        // for tests
+        private String getCSVFilePath() throws IOException {
+            File cacheFile = new File(getApplicationContext().getCacheDir(), "price.csv");
+            AssetManager assetManager = MyApplication.context.getAssets();
+            InputStream inputStream = null;
+            FileOutputStream fileOutputStream = null;
+            try {
+                inputStream = assetManager.open("price.csv");
+                fileOutputStream = new FileOutputStream(cacheFile);
+
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = inputStream.read(buf)) > 0) {
+                    fileOutputStream.write(buf, 0, len);
+                }
+            }
+            finally {
+                if(inputStream != null)
+                    inputStream.close();
+                if(fileOutputStream != null)
+                    fileOutputStream.close();
+            }
+
+            return cacheFile.getAbsolutePath();
         }
 
         private void insertOrUpdate(ContentValues[] values) {
@@ -94,7 +127,10 @@ public class UpdateDBService extends Service {
                 }
             }
 
-            getContentResolver().bulkInsert(PharmacyContract.CONTENT_URI, (ContentValues[]) valuesToInsert.toArray());
+            ContentValues[] contentValues = new ContentValues[valuesToInsert.size()];
+            contentValues = valuesToInsert.toArray(contentValues);
+
+            getContentResolver().bulkInsert(PharmacyContract.CONTENT_URI, contentValues);
 
             //Delete the records which were not affected by the last update
             getContentResolver().delete(PharmacyContract.CONTENT_URI,

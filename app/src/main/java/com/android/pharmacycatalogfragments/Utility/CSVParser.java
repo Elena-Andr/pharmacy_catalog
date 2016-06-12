@@ -19,6 +19,7 @@ import java.util.List;
 
 import com.android.pharmacycatalogfragments.DatabasePart.PharmacyContract.CatalogEntry;
 import com.android.pharmacycatalogfragments.MainActivity;
+import com.android.pharmacycatalogfragments.MyApplication;
 import com.android.pharmacycatalogfragments.R;
 
 
@@ -65,7 +66,11 @@ public class CSVParser {
         contentValues.put(CatalogEntry.COLUMN_VENDOR_NAME, vendorName);
         contentValues.put(CatalogEntry.COLUMN_SECTION, section);
         contentValues.put(CatalogEntry.COLUMN_SEARCH_STR, itemName.toLowerCase());
-        contentValues.put(CatalogEntry.COLUMN_MODIFIED_DATE, currentUpdateTime);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MyApplication.context);
+        String lastModifiedDateS = preferences.getString("last_modified_date", "");
+
+        contentValues.put(CatalogEntry.COLUMN_MODIFIED_DATE, lastModifiedDateS);
 
         return contentValues;
     }
