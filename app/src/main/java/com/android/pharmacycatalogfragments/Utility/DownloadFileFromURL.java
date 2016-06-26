@@ -24,8 +24,6 @@ public class DownloadFileFromURL {
         FileOutputStream outputStream = null;
         HttpURLConnection httpConn = null;
 
-        //TODO: check the connection to the Internet first
-
         try {
             File file = getTempFile(context, "catalog");
             URL url = new URL(fileURL);
@@ -65,15 +63,7 @@ public class DownloadFileFromURL {
         }
     }
 
-    private static boolean isConnectedToInternet(Context context) {
-        ConnectivityManager cm =
-                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork.isConnectedOrConnecting();
-
-        return isConnected;
-    }
 
     private static File getTempFile(Context context, String fileName) {
         File file = null;

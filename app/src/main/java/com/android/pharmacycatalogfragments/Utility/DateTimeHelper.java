@@ -11,7 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DateTimeHelper {
-    private static String LOG_TAG = DateTimeHelper.class.getSimpleName();
+    private static final String LOG_TAG = DateTimeHelper.class.getSimpleName();
 
     public static String getCurrentDateAsString() {
         Calendar calendar = Calendar.getInstance();
