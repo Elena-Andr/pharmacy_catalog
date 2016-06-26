@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,8 +6,14 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.android.pharmacycatalogfragments.MainActivityFragment">
+    tools:context="com.android.pharmacycatalogfragments.MainActivityFragment"
+    android:background="#f9f5f5">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/status_TextView"
+        android:paddingBottom="@dimen/activity_vertical_margin"/>
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,4 +24,4 @@
     </ListView>
 
 
-</RelativeLayout>
+</FrameLayout>

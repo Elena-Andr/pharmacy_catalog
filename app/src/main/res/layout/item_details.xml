@@ -3,4 +3,20 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemNameDetails"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/abc_input_method_navigation_guard" />
+
+    <Space
+        android:layout_width="20px"
+        android:layout_height="40px" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="410dp"
+        android:id="@+id/itemDetailsListView"
+        android:layout_gravity="center_horizontal"/>
 </LinearLayout>

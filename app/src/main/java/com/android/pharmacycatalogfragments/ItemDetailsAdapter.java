@@ -51,16 +51,17 @@ public class ItemDetailsAdapter extends CursorAdapter {
         ViewHolder viewHolder = (ViewHolder)view.getTag();
 
         String vendorName = cursor.getString(CatalogEntry.COL_INDEX_VENDOR_NAME);
-
-        viewHolder.vendorView.setText(vendorName);
+        viewHolder.vendorView.setText("Производитель: " + vendorName);
 
         double itemPrice = cursor.getDouble(CatalogEntry.COL_INDEX_ITEM_PRICE);
-        viewHolder.priceView.setText(itemPrice + " руб.");
+        viewHolder.priceView.setText("Цена: " + itemPrice + " руб.");
 
         int quantity = cursor.getInt(CatalogEntry.COL_INDEX_QUANTITY);
-        viewHolder.quantityView.setText(quantity + " шт.");
+        viewHolder.quantityView.setText("В наличии: " + quantity + " шт.");
 
         String section = cursor.getString(CatalogEntry.COL_INDEX_SECTION);
         viewHolder.sectionView.setText(section);
+
+        viewHolder.sectionAddressView.setText("Адреc: ");
     }
 }

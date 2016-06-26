@@ -1,5 +1,9 @@
 <resources>
-    <string name="app_name">Pharmacy Catalog Fragments</string>
+    <string name="app_name">Аптека №24, г. Абакан</string>
     <string name="action_settings">Settings</string>
     <string name="date_format">dd-MM-yyyy HH:mm:ss</string>
+    <string name="last_mod_date_key">last_modified_date</string>
+    <string name="item_name_title">"Наименование: "</string>
+    <string name="selected_item_parameter">selected_item_name</string>
+    <string name="no_connection_text">Нет соединения</string>
 </resources>
