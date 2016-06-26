@@ -10,33 +10,35 @@ import android.widget.TextView;
 
 import com.android.pharmacycatalogfragments.DatabasePart.PharmacyContract.CatalogEntry;
 
-public class PharmacyAdapter extends CursorAdapter {
+public class ItemDetailsAdapter extends CursorAdapter {
 
     public static class ViewHolder {
 
-        public final TextView nameView;
         public final TextView sectionView;
         public final TextView priceView;
         public final TextView quantityView;
+        public final TextView sectionAddressView;
+        public final TextView vendorView;
 
         public ViewHolder(View view) {
 
-            nameView = (TextView)view.findViewById(R.id.itemNameView);
             sectionView = (TextView)view.findViewById(R.id.sectionView);
             priceView = (TextView)view.findViewById(R.id.itemPriceView);
             quantityView = (TextView)view.findViewById(R.id.quantityView);
+            sectionAddressView = (TextView)view.findViewById(R.id.sectionAddressView);
+            vendorView = (TextView)view.findViewById(R.id.vendorView);
 
         }
     }
 
-    public PharmacyAdapter(Context context, Cursor c, int flags) {
+    public ItemDetailsAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
 
-        View view = LayoutInflater.from(context).inflate(R.layout.list_item_catalog, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.list_item_details, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         view.setTag(viewHolder);
 
@@ -48,10 +50,9 @@ public class PharmacyAdapter extends CursorAdapter {
 
         ViewHolder viewHolder = (ViewHolder)view.getTag();
 
-        String itemName = cursor.getString(CatalogEntry.COL_INDEX_ITEM_NAME);
         String vendorName = cursor.getString(CatalogEntry.COL_INDEX_VENDOR_NAME);
 
-        viewHolder.nameView.setText(itemName + ", " + vendorName);
+        viewHolder.vendorView.setText(vendorName);
 
         double itemPrice = cursor.getDouble(CatalogEntry.COL_INDEX_ITEM_PRICE);
         viewHolder.priceView.setText(itemPrice + " руб.");
