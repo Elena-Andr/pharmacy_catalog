@@ -37,7 +37,7 @@ public class UpdateDBService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MyApplication.context);
-        mCurrentUpdateTime = preferences.getString("last_modified_date", "");
+        mCurrentUpdateTime = preferences.getString(getString(R.string.last_mod_date_key), "");
 
         AsyncUpdater asyncUpdater = new AsyncUpdater();
         asyncUpdater.execute();
@@ -68,44 +68,17 @@ public class UpdateDBService extends Service {
             String localFilePath;
             try {
                 localFilePath = DownloadFileFromURL.downloadFile(urlPath, getApplicationContext());
-                //localFilePath = getCSVFilePath();
                 ContentValues[] contentValues = CSVParser.Parse(localFilePath, mCurrentUpdateTime);
                 if (contentValues.length > 0) {
-                    insertOrUpdate(contentValues);
+                    insertOrUpdateRecords(contentValues);
                 }
             } catch (IOException e) {
-                Log.e(LOG_TAG, "ERROR", e);
+                Log.e(LOG_TAG, e.getMessage());
             }
             stopSelf();
         }
 
-        // for tests
-        private String getCSVFilePath() throws IOException {
-            File cacheFile = new File(getApplicationContext().getCacheDir(), "price.csv");
-            AssetManager assetManager = MyApplication.context.getAssets();
-            InputStream inputStream = null;
-            FileOutputStream fileOutputStream = null;
-            try {
-                inputStream = assetManager.open("price.csv");
-                fileOutputStream = new FileOutputStream(cacheFile);
-
-                byte[] buf = new byte[1024];
-                int len;
-                while ((len = inputStream.read(buf)) > 0) {
-                    fileOutputStream.write(buf, 0, len);
-                }
-            }
-            finally {
-                if(inputStream != null)
-                    inputStream.close();
-                if(fileOutputStream != null)
-                    fileOutputStream.close();
-            }
-
-            return cacheFile.getAbsolutePath();
-        }
-
-        private void insertOrUpdate(ContentValues[] values) {
+        private void insertOrUpdateRecords(ContentValues[] values) {
             List<ContentValues> valuesToInsert = new ArrayList<>();
 
             String selection = PharmacyContract.CatalogEntry.COLUMN_ITEM_NAME + "=? AND "
@@ -117,6 +90,7 @@ public class UpdateDBService extends Service {
                 String vendorName = value.getAsString(PharmacyContract.CatalogEntry.COLUMN_VENDOR_NAME);
                 String section = value.getAsString(PharmacyContract.CatalogEntry.COLUMN_SECTION);
 
+                // Update the records if exists
                 int updatedRows = getContentResolver().update(PharmacyContract.CONTENT_URI,
                         value,
                         selection,
@@ -130,6 +104,7 @@ public class UpdateDBService extends Service {
             ContentValues[] contentValues = new ContentValues[valuesToInsert.size()];
             contentValues = valuesToInsert.toArray(contentValues);
 
+            // Add new records to the DB
             getContentResolver().bulkInsert(PharmacyContract.CONTENT_URI, contentValues);
 
             //Delete the records which were not affected by the last update
