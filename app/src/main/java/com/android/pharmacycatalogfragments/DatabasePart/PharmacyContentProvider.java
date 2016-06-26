@@ -9,15 +9,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 
 import java.util.HashMap;
 
 public class PharmacyContentProvider extends ContentProvider {
 
-    private final String LOG_TAG = PharmacyContentProvider.class.getSimpleName();
+    private static final String LOG_TAG = PharmacyContentProvider.class.getSimpleName();
+    public static final String DISTINCT_PARAMETER = "return_distinct_values";
 
-    static final int CATALOG = 100;
-    static final int CATALOG_SUGGESTIONS = 101;
+    private static final int CATALOG = 100;
+    private static final int CATALOG_SUGGESTIONS = 102;
 
     private PharmacyDBHelper mDBHelper;
 
@@ -59,14 +61,29 @@ public class PharmacyContentProvider extends ContentProvider {
         switch (mUriMatcher.match(uri)) {
 
             case CATALOG:
-                cursor = mDBHelper.getReadableDatabase().query(
+                boolean distinct = Boolean.parseBoolean(uri.getQueryParameter(DISTINCT_PARAMETER));
+
+                if(distinct)
+                cursor = mDBHelper.getReadableDatabase().query(true,
                         PharmacyContract.CatalogEntry.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
+                        PharmacyContract.CatalogEntry.COLUMN_ITEM_NAME,
                         null,
-                        null,
-                        sortOrder);
+                        sortOrder,
+                        null);
+                else
+                    cursor = mDBHelper.getReadableDatabase().query(false,
+                            PharmacyContract.CatalogEntry.TABLE_NAME,
+                            projection,
+                            selection,
+                            selectionArgs,
+                            null,
+                            null,
+                            sortOrder,
+                            null);
+
                 break;
 
             case CATALOG_SUGGESTIONS:
@@ -97,18 +114,18 @@ public class PharmacyContentProvider extends ContentProvider {
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
         queryBuilder.setTables(PharmacyContract.CatalogEntry.TABLE_NAME);
         queryBuilder.setProjectionMap(mAliasMap);
+        queryBuilder.setDistinct(true);
 
         Cursor cursor = queryBuilder.query(mDBHelper.getReadableDatabase(),
                     new String[]{PharmacyContract.CatalogEntry.COLUMN_ID,
                             SearchManager.SUGGEST_COLUMN_TEXT_1},
                     selection,
                     selectionArgs,
-                    null,
+                SearchManager.SUGGEST_COLUMN_TEXT_1,
                     null,
                     null,
                     null);
 
-        // TODO: implement returning distinct values (using rawQuery)
         return cursor;
     }
 
@@ -194,8 +211,6 @@ public class PharmacyContentProvider extends ContentProvider {
                 try {
                     for (ContentValues value : values) {
                         long _id = db.insert(PharmacyContract.CatalogEntry.TABLE_NAME, null, value);
-                        //long _id = insertOrUpdate(value);
-                        //long _id = db.insertWithOnConflict(PharmacyContract.CatalogEntry.TABLE_NAME, null, value, SQLiteDatabase.CONFLICT_REPLACE);
                         if (_id != -1) {
                             returnCount++;
                         }
@@ -210,55 +225,5 @@ public class PharmacyContentProvider extends ContentProvider {
                 return super.bulkInsert(uri, values);
         }
     }
-
-    /*private long insertOrUpdate(ContentValues value) {
-
-        String itemName = value.getAsString(PharmacyContract.CatalogEntry.COLUMN_ITEM_NAME);
-        String vendorName = value.getAsString(PharmacyContract.CatalogEntry.COLUMN_VENDOR_NAME);
-        String section = value.getAsString(PharmacyContract.CatalogEntry.COLUMN_SECTION);
-
-        long id = getID(itemName, vendorName, section);
-
-        if(id == -1) {
-            id = mDBHelper.getWritableDatabase().insert(PharmacyContract.CatalogEntry.TABLE_NAME, null, value);
-            //id = mDBHelper.getWritableDatabase().insert(PharmacyContract.CatalogEntry.TABLE_NAME, null, value);
-        }
-        else {
-            id = mDBHelper.getWritableDatabase().update(PharmacyContract.CatalogEntry.TABLE_NAME,
-                    value,
-                    PharmacyContract.CatalogEntry.COLUMN_ID + "=?",
-                    new String[]{Long.toString(id)});
-        }
-
-        return id;
-    }
-
-    private long getID(String itemName, String vendorName, String section){
-
-        String selection = PharmacyContract.CatalogEntry.COLUMN_ITEM_NAME + "=? AND "
-                + PharmacyContract.CatalogEntry.COLUMN_VENDOR_NAME + "=? AND "
-                + PharmacyContract.CatalogEntry.COLUMN_SECTION + "=?";
-
-        Cursor c = null;
-        try {
-            c = mDBHelper.getWritableDatabase().query(PharmacyContract.CatalogEntry.TABLE_NAME,
-                    new String[]{PharmacyContract.CatalogEntry.COLUMN_ID},
-                    selection,
-                    new String[]{itemName, vendorName, section},
-                    null,
-                    null,
-                    null,
-                    null);
-
-            if (c.moveToFirst()) //if the row exist then return the id
-                return c.getLong(c.getColumnIndex(PharmacyContract.CatalogEntry.COLUMN_ID));
-            return -1;
-        }
-        finally {
-            if(c != null)
-                c.close();
-        }
-    }*/
-
 }
 
