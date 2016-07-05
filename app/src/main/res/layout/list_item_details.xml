@@ -14,16 +14,16 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Цена: 120 руб."
-        android:id="@+id/itemPriceView"
-        android:layout_gravity="right"
-        android:textColor="@android:color/white" />
+        android:text="Адрес..."
+        android:id="@+id/sectionAddressView"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Адрес..."
-        android:id="@+id/sectionAddressView"/>
+        android:text="Цена: 120 руб."
+        android:id="@+id/itemPriceView"
+        android:layout_gravity="right"
+        android:textColor="@android:color/black" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -31,7 +31,7 @@
         android:text="В наличии 150 шт."
         android:id="@+id/quantityView"
         android:layout_gravity="right"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/black" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -39,6 +39,6 @@
         android:text="Производство"
         android:id="@+id/vendorView"
         android:layout_weight="1"
-        android:textColor="@color/abc_input_method_navigation_guard" />
+        android:textColor="@color/primary_material_dark" />
 
 </LinearLayout>
