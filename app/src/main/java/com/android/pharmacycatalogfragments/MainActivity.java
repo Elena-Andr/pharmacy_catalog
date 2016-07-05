@@ -39,9 +39,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnSugg
     public void onBackPressed() {
         if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
 
+            // Enable Search View
             mSearchView.setEnabled(true);
             mSearchView.setVisibility(View.VISIBLE);
             mSearchView.setInputType(InputType.TYPE_CLASS_TEXT);
+
             getSupportFragmentManager().popBackStack();
         }
         else
@@ -120,7 +122,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnSugg
         String[] from = {SearchManager.SUGGEST_COLUMN_TEXT_1};
         int[] to = {R.id.itemName};
 
-        mSearchAdapter = new SimpleCursorAdapter(this, R.layout.suggestions_item, null, from, to, 0);
+        mSearchAdapter = new SimpleCursorAdapter(this, R.layout.suggestions_item, null, from, to, 0) {
+
+            // http://stackoverflow.com/questions/30681308/java-lang-illegalstateexception-attempt-to-re-open-an-already-closed-object-sq
+            @Override
+            public void changeCursor(Cursor cursor) {
+                super.swapCursor(cursor);
+            }
+        };
 
         mSearchView.setSuggestionsAdapter(mSearchAdapter);
         mSearchView.setOnQueryTextListener(this);
@@ -132,7 +141,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnSugg
     @Override
     public boolean onQueryTextSubmit(String query) {
 
-        Uri catalogUri = PharmacyContract.CONTENT_URI.buildUpon().appendQueryParameter(PharmacyContentProvider.DISTINCT_PARAMETER, "true").build();
+        Uri catalogUri = PharmacyContract.CONTENT_URI.buildUpon()
+                .appendQueryParameter(PharmacyContentProvider.DISTINCT_PARAMETER, "true")
+                .build();
 
         Cursor cursor = getContentResolver().query(catalogUri,
                 PharmacyContract.CatalogEntry.CATALOG_COLUMNS,
@@ -195,10 +206,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnSugg
     @Override
     public void onItemSelected(String itemName) {
 
+        // Disable Search View
         mSearchView.setEnabled(false);
         mSearchView.setVisibility(View.GONE);
         mSearchView.setInputType(InputType.TYPE_NULL);
 
+        // Launch Details Fragment about the selected item
         Bundle args = new Bundle();
         args.putString(getString(R.string.selected_item_parameter), itemName);
 
