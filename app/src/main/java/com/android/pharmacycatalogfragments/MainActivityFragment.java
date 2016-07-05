@@ -25,7 +25,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     public SimpleCursorAdapter mPharmacyAdapter;
     private ListView mListView;
-    private TextView mStatusTextView;
 
     public MainActivityFragment() {
     }
@@ -53,8 +52,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 }
             }
         });
-
-        mStatusTextView = (TextView)rootView.findViewById(R.id.status_TextView);
 
         return rootView;
     }
