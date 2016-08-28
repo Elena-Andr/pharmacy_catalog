@@ -20,8 +20,5 @@
         android:layout_height="410dp"
         android:id="@+id/itemDetailsListView"
         android:layout_gravity="center_horizontal"
-        android:divider="@color/accent_material_light"
-        android:headerDividersEnabled="true"
-
-        android:dividerHeight="3dp" />
+        android:headerDividersEnabled="true"/>
 </LinearLayout>

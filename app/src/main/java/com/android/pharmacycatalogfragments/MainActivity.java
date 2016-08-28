@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnSugg
             passedMinutesAfterUpdate = DateTimeHelper.getMinutesBetweenDates(currentDate, lastModifiedDate);
         }
 
-        if(passedMinutesAfterUpdate > 1 || lastModifiedDateS.equals("")) {
+        if(passedMinutesAfterUpdate > 180 || lastModifiedDateS.equals("")) {
 
             // Check Internet connection
             if(!isConnectedToInternet()) {

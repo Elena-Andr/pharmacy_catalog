@@ -1,6 +1,7 @@
 package com.android.pharmacycatalogfragments;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
@@ -48,6 +49,7 @@ public class ItemDetailsAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
+        // TODO move strings to the resources
         ViewHolder viewHolder = (ViewHolder)view.getTag();
 
         String vendorName = cursor.getString(CatalogEntry.COL_INDEX_VENDOR_NAME);

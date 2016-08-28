@@ -18,9 +18,6 @@ import android.widget.TextView;
 import com.android.pharmacycatalogfragments.DatabasePart.PharmacyContentProvider;
 import com.android.pharmacycatalogfragments.DatabasePart.PharmacyContract;
 
-/**
- * A placeholder fragment containing a list view.
- */
 public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public SimpleCursorAdapter mPharmacyAdapter;
