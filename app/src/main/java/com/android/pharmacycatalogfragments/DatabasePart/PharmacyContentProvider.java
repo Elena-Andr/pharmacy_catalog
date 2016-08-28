@@ -9,15 +9,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 
 import java.util.HashMap;
 
 public class PharmacyContentProvider extends ContentProvider {
 
-    public final String LOG_TAG = PharmacyContentProvider.class.getSimpleName();
+    private static final String LOG_TAG = PharmacyContentProvider.class.getSimpleName();
+    public static final String DISTINCT_PARAMETER = "return_distinct_values";
 
     private static final int CATALOG = 100;
-    private static final int CATALOG_SUGGESTIONS = 101;
+    private static final int CATALOG_SUGGESTIONS = 102;
 
     private PharmacyDBHelper mDBHelper;
 
@@ -59,14 +61,29 @@ public class PharmacyContentProvider extends ContentProvider {
         switch (mUriMatcher.match(uri)) {
 
             case CATALOG:
-                cursor = mDBHelper.getReadableDatabase().query(
+                boolean distinct = Boolean.parseBoolean(uri.getQueryParameter(DISTINCT_PARAMETER));
+
+                if(distinct)
+                cursor = mDBHelper.getReadableDatabase().query(true,
                         PharmacyContract.CatalogEntry.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
+                        PharmacyContract.CatalogEntry.COLUMN_ITEM_NAME,
                         null,
-                        null,
-                        sortOrder);
+                        sortOrder,
+                        null);
+                else
+                    cursor = mDBHelper.getReadableDatabase().query(false,
+                            PharmacyContract.CatalogEntry.TABLE_NAME,
+                            projection,
+                            selection,
+                            selectionArgs,
+                            null,
+                            null,
+                            sortOrder,
+                            null);
+
                 break;
 
             case CATALOG_SUGGESTIONS:
@@ -97,18 +114,17 @@ public class PharmacyContentProvider extends ContentProvider {
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
         queryBuilder.setTables(PharmacyContract.CatalogEntry.TABLE_NAME);
         queryBuilder.setProjectionMap(mAliasMap);
+        queryBuilder.setDistinct(true);
 
         Cursor cursor = queryBuilder.query(mDBHelper.getReadableDatabase(),
                     new String[]{PharmacyContract.CatalogEntry.COLUMN_ID,
                             SearchManager.SUGGEST_COLUMN_TEXT_1},
                     selection,
                     selectionArgs,
-                    null,
+                SearchManager.SUGGEST_COLUMN_TEXT_1,
                     null,
                     null,
                     null);
-
-        // TODO: implement returning distinct values (using rawQuery)
 
         return cursor;
     }
@@ -170,7 +186,9 @@ public class PharmacyContentProvider extends ContentProvider {
 
         switch (match) {
             case CATALOG:
-                rowsUpdated = db.update(PharmacyContract.CatalogEntry.TABLE_NAME, values, selection,
+                rowsUpdated = db.update(PharmacyContract.CatalogEntry.TABLE_NAME,
+                        values,
+                        selection,
                         selectionArgs);
                 break;
             default:

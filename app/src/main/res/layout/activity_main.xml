@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="#21824e">
 
 <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -10,13 +11,11 @@
         android:layout_height="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
 
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment"
-    android:name="com.android.pharmacycatalogfragments.MainActivityFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.android.pharmacycatalogfragments.MainActivityFragment"
-    tools:layout="@android:layout/list_content" />
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="@style/Base.AlertDialog.AppCompat.Light">
+    </FrameLayout>
 
 </LinearLayout>

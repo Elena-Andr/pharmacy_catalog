@@ -3,9 +3,10 @@
     package="com.android.pharmacycatalogfragments">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
-    <application
+    <application android:name="com.android.pharmacycatalogfragments.MyApplication">
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -14,7 +15,8 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -30,6 +32,7 @@
             android:name="com.android.pharmacycatalogfragments.DatabasePart.PharmacyContentProvider"
             android:authorities="com.android.pharmacycatalogfragments">
         </provider>
+        <service android:name=".UpdateDBService"></service>
     </application>
 
 </manifest>

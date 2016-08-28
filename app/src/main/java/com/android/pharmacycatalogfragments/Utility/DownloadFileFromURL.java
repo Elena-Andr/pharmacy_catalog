@@ -1,4 +1,4 @@
-package com.android.pharmacycatalogfragments.FileHelperPart;
+package com.android.pharmacycatalogfragments.Utility;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -15,7 +15,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class DownloadFileFromURL {
 
-    public static final String LOG_TAG = DownloadFileFromURL.class.getSimpleName();
+    private static final String LOG_TAG = DownloadFileFromURL.class.getSimpleName();
     private static final int BUFFER_SIZE = 10 * 1024;
 
     public static String downloadFile(String fileURL, Context context)
@@ -23,8 +23,6 @@ public class DownloadFileFromURL {
         InputStream inputStream = null;
         FileOutputStream outputStream = null;
         HttpURLConnection httpConn = null;
-
-        //TODO: check the connection to the Internet first
 
         try {
             File file = getTempFile(context, "catalog");
@@ -65,15 +63,7 @@ public class DownloadFileFromURL {
         }
     }
 
-    private static boolean isConnectedToInternet(Context context) {
-        ConnectivityManager cm =
-                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork.isConnectedOrConnecting();
-
-        return isConnected;
-    }
 
     private static File getTempFile(Context context, String fileName) {
         File file = null;
